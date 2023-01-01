@@ -1,0 +1,205 @@
+{
+	"info": {
+		"_postman_id": "26001aa1-966e-45f8-abd5-2ba21e6351b2",
+		"name": "05 - searchSummaryEvent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7253120"
+	},
+	"item": [
+		{
+			"name": "SearchSummaryEvent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// reseponse time",
+							"pm.test(\"Response time is less than 1s\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status message is OK\", function () {",
+							"    pm.response.to.have.status(\"OK\");",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Verify serach name Philip: \"+jsonData.data.getEventFunnelParticipant.data[0].name, function () {",
+							"    pm.expect(jsonData.data.getEventFunnelParticipant.data[0].name).is.contains(\"Philip\");",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetEventFunnelParticipant($search: EventParticipantSearch $filter: EventSummaryFunnelFilter) {\r\n    getEventFunnelParticipant(search:$search filter: $filter){\r\n  \t\tdata {\r\n        _id\r\n        name\r\n        major\r\n        class\r\n        funnelStatus\r\n      }\r\n     count\r\n  \t}\r\n  }\r\n",
+						"variables": "{\r\n  \"search\": {\r\n      \"name\": \"Philip\"\r\n  },\r\n  \"filter\": {\r\n    \"year\": \"2022\",\r\n    \"campus\": \"\",\r\n    \"semester\": \"\",\r\n    \"major\": \"\",\r\n    \"class\": \"\",\r\n    \"funnelName\": \"Interest\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graphql-branding}}",
+					"host": [
+						"{{graphql-branding}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SearchSummaryEvent-404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// reseponse time",
+							"pm.test(\"Response time is less than 1s\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status message is OK\", function () {",
+							"    pm.response.to.have.status(\"OK\");",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Verify 404 data count: \"+jsonData.data.getEventFunnelParticipant.count, function () {",
+							"    pm.expect(jsonData.data.getEventFunnelParticipant.count).is.equal(0);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetEventFunnelParticipant($search: EventParticipantSearch $filter: EventSummaryFunnelFilter) {\r\n    getEventFunnelParticipant(search:$search filter: $filter){\r\n  \t\tdata {\r\n        _id\r\n        name\r\n        major\r\n        class\r\n        funnelStatus\r\n      }\r\n     count\r\n  \t}\r\n  }\r\n",
+						"variables": "{\r\n  \"search\": {\r\n      \"name\": \"Gonjo\"\r\n  },\r\n  \"filter\": {\r\n    \"year\": \"2022\",\r\n    \"campus\": \"\",\r\n    \"semester\": \"\",\r\n    \"major\": \"\",\r\n    \"class\": \"\",\r\n    \"funnelName\": \"Interest\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graphql-branding}}",
+					"host": [
+						"{{graphql-branding}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SearchSummaryEvent-500",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// reseponse time",
+							"pm.test(\"Response time is less than 1s\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Status message is OK\", function () {",
+							"    pm.response.to.have.status(\"OK\");",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Verify error 500: \"+jsonData.errors[0].message, function () {",
+							"    pm.expect(jsonData.errors[0].message).is.contains(\"Error: Arguments must be aggregate pipeline operators\");",
+							"})",
+							"",
+							"pm.test(\"Verify response code: \"+jsonData.errors[0].extensions.code, function () {",
+							"    pm.expect(jsonData.errors[0].extensions.code).is.equal(500);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetEventFunnelParticipant($search: EventParticipantSearch $filter: EventSummaryFunnelFilter) {\r\n    getEventFunnelParticipant(search:$search filter: $filter){\r\n  \t\tdata {\r\n        _id\r\n        name\r\n        major\r\n        class\r\n        funnelStatus\r\n      }\r\n     count\r\n  \t}\r\n  }\r\n",
+						"variables": "{\r\n  \"search\": {\r\n      \"name\": \"\"\r\n  },\r\n  \"filter\": {\r\n    \"year\": \"\",\r\n    \"campus\": \"\",\r\n    \"semester\": \"\",\r\n    \"major\": \"\",\r\n    \"class\": \"\",\r\n    \"funnelName\": \"\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graphql-branding}}",
+					"host": [
+						"{{graphql-branding}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearer_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// New Login",
+					"pm.sendRequest(",
+					"    {",
+					"    url: pm.environment.get(\"graphql-auth\"),",
+					"    method: \"POST\",",
+					"    header: {",
+					"        \"x-api-key\": pm.environment.get(\"x-api-key\"),",
+					"        \"Content-Type\": \"application/json\",",
+					"    },",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: JSON.stringify({query: \"mutation LoginUser {\\r\\n  login(input: {\\r\\n    #   dev\\r\\n    email: \\\"rayhan@codex.works\\\"\\r\\n    password: \\\"rayhan1105\\\"\\r\\n  }) {\\r\\n    token\\r\\n    roleId {\\r\\n      _id\\r\\n      title\\r\\n      state\\r\\n    }\\r\\n    userTypeId {\\r\\n      _id\\r\\n      title\\r\\n      state\\r\\n    }\\r\\n  }\\r\\n}\"})",
+					"        }",
+					"    }, function(err, res) {",
+					"        // console.log(res.json().data.login.token);",
+					"        var token = res.json().data.login.token; ",
+					"        pm.environment.set(\"bearer_token\", token);",
+					"    });"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
